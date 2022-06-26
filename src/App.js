@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 
 import words from "./words";
