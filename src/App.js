@@ -46,6 +46,43 @@ const keyboard = {
   BACKSPACE: null,
 };
 
+const keyboardUI = [
+  {
+    Q: null,
+    W: null,
+    E: null,
+    R: null,
+    T: null,
+    Y: null,
+    U: null,
+    I: null,
+    O: null,
+    P: null,
+  },
+  {
+    A: null,
+    S: null,
+    D: null,
+    F: null,
+    G: null,
+    H: null,
+    J: null,
+    K: null,
+    L: null,
+  },
+  {
+    ENTER: null,
+    Z: null,
+    X: null,
+    C: null,
+    V: null,
+    B: null,
+    N: null,
+    M: null,
+    BACKSPACE: null,
+  },
+];
+
 const generateClassName = (solution, currentChar, index) => {
   if (!currentChar) {
     return;
@@ -144,6 +181,7 @@ const App = () => {
       setTimeout(() => dispatch({ type: "CLEAR_SHAKE" }), 500);
     }
   }, [shake]);
+
   useEffect(() => {
     const listener = (event) => {
       if (gameState.isOver) {
@@ -181,66 +219,76 @@ const App = () => {
 
   return (
     <div className="container">
-      {shake && `Not a word!`}
-      {board.map((word, wordIdx) => (
-        <div
-          key={wordIdx}
-          className={`row ${
-            wordIdx === currentRowIndex && shake ? "shake" : ""
-          }`}
-        >
-          {wordIdx === currentRowIndex
-            ? currentRow.map((char, charIdx) => (
-                <div key={charIdx} className="col">
-                  {char}
-                </div>
-              ))
-            : word.map((char, charIdx) => (
-                <div
-                  key={charIdx}
-                  className={`col ${generateClassName(
-                    solution,
-                    char,
-                    charIdx
-                  )} ${wordIdx === currentRowIndex - 1 ? "completed" : ""}`}
-                  style={{
-                    animationDelay: `${charIdx * 100}ms`,
-                    transitionDelay: `${charIdx * 100}ms`,
-                  }}
-                >
-                  {char && char.toUpperCase()}
-                </div>
-              ))}
-        </div>
-      ))}
-      {isOver && (
-        <div>
-          <div>Game Over!</div>
-          {isWin ? (
-            <div>You found!</div>
-          ) : (
-            <div className="row">
-              {solution
-                .toUpperCase()
-                .split("")
-                .map((char, index) => (
-                  <div key={index} className="col green">
-                    {char}
-                  </div>
-                ))}
-            </div>
-          )}
-          <button onClick={() => dispatch({ type: "RESTART" })}>RESTART</button>
-        </div>
-      )}
-      <div className="keyboard">
-        {Object.keys(keyboard).map((key) => (
-          <button
-            onClick={() => handleClick(key)}
-            className={`key ${keyboard[key] ?? ""}`}
+      <div className="board">
+        {board.map((word, wordIdx) => (
+          <div
+            key={wordIdx}
+            className={`row ${
+              wordIdx === currentRowIndex && shake ? "shake" : ""
+            }`}
           >
-            {key}
-          </button>
+            {wordIdx === currentRowIndex
+              ? currentRow.map((char, charIdx) => (
+                  <span key={charIdx} className="col">
+                    {char}
+                  </span>
+                ))
+              : word.map((char, charIdx) => (
+                  <span
+                    key={charIdx}
+                    className={`col ${generateClassName(
+                      solution,
+                      char,
+                      charIdx
+                    )} ${wordIdx === currentRowIndex - 1 ? "completed" : ""}`}
+                    style={{
+                      animationDelay: `${charIdx * 100}ms`,
+                      transitionDelay: `${charIdx * 100}ms`,
+                    }}
+                  >
+                    {char && char.toUpperCase()}
+                  </span>
+                ))}
+          </div>
+        ))}
+      </div>
+      {shake && <span style={{ fontSize: "1.5rem" }}>Not a word!</span>}
+      <div className="modal" style={{ height: isOver ? "auto" : 0 }}>
+        {isOver && (
+          <div className="modal--content">
+            <div>Game Over!</div>
+            {isWin ? (
+              <div>You found!</div>
+            ) : (
+              <div className="row">
+                {solution
+                  .toUpperCase()
+                  .split("")
+                  .map((char, index) => (
+                    <div key={index} className="col green">
+                      {char}
+                    </div>
+                  ))}
+              </div>
+            )}
+            <button onClick={() => dispatch({ type: "RESTART" })}>
+              RESTART
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="keyboard">
+        {keyboardUI.map((keyboardRow) => (
+          <div className="keyboard-row">
+            {Object.keys(keyboardRow).map((key) => (
+              <button
+                onClick={() => handleClick(key)}
+                className={`key ${keyboard[key] ?? ""}`}
+              >
+                {key}
+              </button>
+            ))}
+          </div>
         ))}
       </div>
     </div>
